@@ -37,6 +37,7 @@ export const SignIn = () => {
     axios.post("http://localhost:7777/login" , data).then((res)=>{
         console.log(res.data)
         alert("Logged in  Successfully !!")
+        sessionStorage.setItem("user",JSON.stringify(res.data))
          setTimeout(()=>{navigate("/")},3000)
     }).catch((error)=>{
       if(error.message){
