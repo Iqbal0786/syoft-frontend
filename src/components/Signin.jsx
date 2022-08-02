@@ -34,7 +34,7 @@ export const SignIn = () => {
   };
 
   const loginHandler = () => {
-    axios.post("http://localhost:7777/login" , data).then((res)=>{
+    axios.post("https://syoft-db.herokuapp.com/login" , data).then((res)=>{
         console.log(res.data)
         alert("Logged in  Successfully !!")
         sessionStorage.setItem("user",JSON.stringify(res.data))

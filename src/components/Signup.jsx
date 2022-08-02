@@ -26,7 +26,7 @@ export const SignUp = () => {
     setData({ ...data, [id]: value });
   };
   const RegisterHandler = () => {
-         axios.post("http://localhost:7777/register" , data).then((res)=>{
+         axios.post("https://syoft-db.herokuapp.com/register" , data).then((res)=>{
             console.log(res.data)
             alert("Registered Successfully !!")
             setTimeout(() => {
