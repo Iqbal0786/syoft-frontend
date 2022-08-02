@@ -1,3 +1,4 @@
+import { AppBar, Toolbar } from '@mui/material';
 import React, { useEffect } from 'react'
 
 export default function ProductList() {
@@ -6,6 +7,10 @@ export default function ProductList() {
      console.log(userdata)
   },[])
   return (
-    <div>ProductList</div>
+   <>
+    <AppBar>
+      <Toolbar>Welcome to Syoft.shop</Toolbar>
+    </AppBar>
+   </>
   )
 }
