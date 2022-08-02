@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Paper from "@mui/material/Paper";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -31,14 +31,38 @@ export default function CreateProduct() {
         user_id:""
 
       });
+      const [token,setToken]=useState("")
+      
+      const navigate= useNavigate()
       const getformData = (e) => {
         let { id, value } = e.target;
         setData({ ...data, [id]: value });
       };
- const addProduct=()=>{
+      const addProduct=()=>{
+        axios.post("http://localhost:7777/product" , data, {
+            headers: {
+            'Authorization': token,
+            'Accept' : 'application/json',
+            'Content-Type': 'application/json'
+        }}).then((res)=>{
+            alert("Product Added Successfully!!")
+            console.log(res)
+        }).catch((error)=>{
+             if(error.message){
+                alert("Warning!! You are not allowed for this operation")
+             }
+        })
 
- }
- 
+    }
+
+
+    useEffect(()=>{
+        const sessionData= JSON.parse(sessionStorage.getItem("user"));
+        console.log(sessionData.token)
+        setToken(sessionData.token)
+
+    },[])
+
 
   return (
    <>
