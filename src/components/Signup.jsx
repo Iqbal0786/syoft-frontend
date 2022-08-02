@@ -29,7 +29,7 @@ export const SignUp = () => {
          axios.post("http://localhost:7777/register" , data).then((res)=>{
             console.log(res.data)
             alert("Registered Successfully !!")
-            setInterval(() => {
+            setTimeout(() => {
                 navigate("/login")
             }, 3000);
         }).catch((error)=>{

@@ -19,9 +19,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios"
 
 export const SignIn = () => {
-
+ const navigate= useNavigate()
   
   const [data, setData] = useState({
     email: "",
@@ -33,7 +34,17 @@ export const SignIn = () => {
   };
 
   const loginHandler = () => {
-    
+    axios.post("http://localhost:7777/login" , data).then((res)=>{
+        console.log(res.data)
+        alert("Logged in  Successfully !!")
+         setTimeout(()=>{navigate("/")},3000)
+    }).catch((error)=>{
+      if(error.message){
+        alert("Please Try another email or password")
+        console.log(error)
+      }
+       
+    })
   };
 
   return (
