@@ -5,20 +5,14 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link  ,useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const SignUp = () => {
-  const notify = () =>
-    toast.success("Registered Successfully", {
-      position: "top-center",
-    });
-  const notify2 = () =>
-    toast.error("Please check your email or password", {
-      position: "top-center",
-    });
+    const navigate=useNavigate()
   const [data, setData] = useState({
     username: "",
     phone: "",
@@ -31,9 +25,21 @@ export const SignUp = () => {
     let { id, value } = e.target;
     setData({ ...data, [id]: value });
   };
-  const registerHandler = (e) => {
-        let {id,value}=e.target;
-         setData({...data,[id]:value});
+  const RegisterHandler = () => {
+         axios.post("http://localhost:7777/register" , data).then((res)=>{
+            console.log(res.data)
+            alert("Registered Successfully !!")
+            setInterval(() => {
+                navigate("/login")
+            }, 3000);
+        }).catch((error)=>{
+          if(error.message){
+            alert("Please Try another email or password")
+            console.log(error)
+          }
+           
+        })
+
   };
   const handleCheckbox=(e)=>{
        const {value,checked} = e.target;
@@ -48,7 +54,9 @@ export const SignUp = () => {
        }
   }
 
-  console.log(data)
+//    useEffect(()=>{
+//    RegisterHandler();
+//    },[])
   return (
     <>
 
@@ -127,7 +135,7 @@ export const SignUp = () => {
           <Button
             variant="contained"
             sx={{ backgroundColor: "#572afb", color: "white " }}
-            onClick={registerHandler}
+            onClick={RegisterHandler}
           >
             Create your account
           </Button>
