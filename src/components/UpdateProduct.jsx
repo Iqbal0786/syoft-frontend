@@ -1,15 +1,10 @@
 import React, { useEffect } from 'react'
 import Paper from "@mui/material/Paper";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 
 import {
-  Alert,
-  AlertTitle,
   AppBar,
-  Checkbox,
-  IconButton,
-  Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -19,17 +14,18 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+
 import axios from "axios"
 
-export default function CreateProduct() {
+export default function UpdateProduct() {
+    
+    const {id}= useParams();
     const [token,setToken]=useState({token:"",user_id:""})
-    const [data, setData] = useState({
-        name: "",
-        price: 0,
+    const [updateddata, setUpdatedData] = useState({
+        name: "" ,
+        price:0,
         description:"",
         count:0,
-        user_id:token.user_id
 
       });
   
@@ -37,59 +33,64 @@ export default function CreateProduct() {
       const navigate= useNavigate()
       const getformData = (e) => {
         let { id, value } = e.target;
-        setData({ ...data, [id]: value });
+        setUpdatedData({ ...updateddata, [id]: value });
       };
-      const addProduct=()=>{
+      const updateProductHandler=()=>{
         const stringPattern=/^[ a-zA-Z]/
 
-        if(!stringPattern.test(data.name)){
+        if(!stringPattern.test(updateddata.name)){
         toast.warn("Product Name must be alphabates")
         }
-        else  if(data.price<=0){
+        else  if(updateddata.price<=0){
           toast.warn("Product Price must be a positive interger value")
           }
-          else if(!stringPattern.test(data.description)){
+          else if(!stringPattern.test(updateddata.description)){
             toast.warn("Product Description must be alphabates")
             }
-            else  if(data.count<=0){
+            else  if(updateddata.count<=0){
               toast.warn("Product Quantity must be a positive interger value")
               }
-        
-        else {
-          axios.post("https://syoft-db.herokuapp.com/products" ,data,{ headers: {"Authorization" : `Bearer ${token.token}`} }).then((res)=>{
-            toast.success("Product Added Successfully!!",{position:"top-center"})
-            console.log(res)
-        }).catch((error)=>{
-            console.log(error)
-             if(error.message){
-                toast.warning("Warning!! You are not allowed for this operation",{position:"top-center"})
-             }
-        })
-        }
-     
+       else {
+        axios.patch(`https://syoft-db.herokuapp.com/products/${id}` ,updateddata,{ headers: {"Authorization" : `Bearer ${token.token}`} }).then((res)=>{
+          toast.success("Product Updated  Successfully!!",{
+               position: 'top-center'
+          })
+          setTimeout(()=>{navigate("/")},3000)
+          console.log(res)
+      }).catch((error)=>{
+          console.log(error)
+           if(error.message){
+              toast.warning("Warning!! You are not allowed for this operation",{
+                  position: 'top-center'
+              })
+           }
+      })
+       }
 
     }
 
 
     useEffect(()=>{
         const sessionData= JSON.parse(sessionStorage.getItem("user"));
-        
-        if(sessionData){
-          console.log(sessionData.token)
-          setToken({token:sessionData.token,user_id:sessionData.user._id})
-        }
-        else{
-          navigate("/login")
-        }
+        const clickedData= JSON.parse(sessionStorage.getItem("clickedData"));
+         setUpdatedData(clickedData);
+        //  console.log(clickedData)
+       if(sessionData){
+        setToken({token:sessionData.token,user_id:sessionData.user._id});
+       }
+       else{
+        navigate("/login")
+       }
+
 
     },[])
-
+console.log("updated data",updateddata)
 
   return (
    <>
    <AppBar>
     <Toolbar>
-        <Link to={"/"} style={{textDecoration:"none" , color:"white"}}><Typography>Go to Home</Typography></Link>
+        Admin Page
     </Toolbar>
    </AppBar>
     <Box
@@ -114,44 +115,47 @@ export default function CreateProduct() {
             variant="h3"
             sx={{ fontSize: "25px", fontWeight: "bold", marginBottom: "20px" }}
           >
-           Add Product From Here
+           Update Product From Here
           </Typography>
           <TextField
             id="name"
-            label="Product Name"
             variant="outlined"
             sx={{ marginBottom: "25px" }}
+            value={updateddata.name}
             onChange={getformData}
+            
           />
           <TextField
             id="price"
-            label="Product Price"
             type="number"
             variant="outlined"
             sx={{ marginBottom: "10px" }}
+            value={updateddata.price}
             onChange={getformData}
+          
           />
           <TextField
             id="description"
-            label="Product Description"
             variant="outlined"
             sx={{ marginBottom: "25px" }}
             onChange={getformData}
+            value={updateddata.description}
           />
           <TextField
             id="count"
-            label="Product Count/Quantity"
             type="number"
             variant="outlined"
             sx={{ marginBottom: "25px" }}
+            value={updateddata.count}
             onChange={getformData}
+          
           />
           <Button
             variant="contained"
             sx={{ backgroundColor: "#572afb", color: "white " }}
-            onClick={addProduct}
+            onClick={updateProductHandler}
           >
-           Add Product
+           Update Product
           </Button>
     
         </Paper>

@@ -34,18 +34,37 @@ export const SignIn = () => {
   };
 
   const loginHandler = () => {
-    axios.post("https://syoft-db.herokuapp.com/login" , data).then((res)=>{
+    const emailpattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+     const passwordPattern =
+       /^(?=[^A-Z\n]*[A-Z])(?=[^a-z\n]*[a-z])(?=[^0-9\n]*[0-9])(?=[^#?!@$%^&*\n-]*[#?!@$%^&*-]).{8,}$/;
+       if(!emailpattern.test(data.email)){
+        toast.warn("There must be a valid email address", {
+          position: "top-center",
+        });
+       }
+       else if (!passwordPattern.test(data.password)) {
+        toast.warn(
+          "Password must be in Alphanumeric format and min length of 8",
+          {
+            position: "top-center",
+          }
+        );
+      }
+
+      else{
+        axios.post("https://syoft-db.herokuapp.com/login" , data).then((res)=>{
         console.log(res.data)
-        alert("Logged in  Successfully !!")
+        toast.success("Logged in  Successfully !!",{position:"top-center"})
         sessionStorage.setItem("user",JSON.stringify(res.data))
          setTimeout(()=>{navigate("/")},3000)
     }).catch((error)=>{
       if(error.message){
-        alert("Please Try another email or password")
+        toast.error("Please Try another email or password",{position:"top-center"})
         console.log(error)
       }
        
     })
+      }
   };
 
   return (

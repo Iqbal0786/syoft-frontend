@@ -1,11 +1,9 @@
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import { Checkbox, FormControl, FormControlLabel, FormGroup, IconButton, OutlinedInput, Select, Typography } from "@mui/material";
+import { Checkbox, FormControlLabel, FormGroup,  Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link  ,useNavigate } from "react-router-dom";
@@ -26,19 +24,57 @@ export const SignUp = () => {
     setData({ ...data, [id]: value });
   };
   const RegisterHandler = () => {
-         axios.post("https://syoft-db.herokuapp.com/register" , data).then((res)=>{
-            console.log(res.data)
-            alert("Registered Successfully !!")
-            setTimeout(() => {
-                navigate("/login")
-            }, 3000);
-        }).catch((error)=>{
-          if(error.message){
-            alert("Please Try another email or password")
-            console.log(error)
-          }
-           
-        })
+     // validation for email ,name and password
+     const namepattern = /[a-zA-Z0-9]/;
+     const numberpattern= /^\d{10}$/
+     const emailpattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+     const passwordPattern =
+       /^(?=[^A-Z\n]*[A-Z])(?=[^a-z\n]*[a-z])(?=[^0-9\n]*[0-9])(?=[^#?!@$%^&*\n-]*[#?!@$%^&*-]).{8,}$/;
+ 
+     if (!namepattern.test(data.username)) {
+       toast.warn("User Name must contain  only alphabates", {
+         position: "top-center",
+       });
+     } else if (!numberpattern.test(data.phone)) {
+       toast.warn("Phone number  must contain  only 10 digits", {
+         position: "top-center",
+       });
+     } else if (!emailpattern.test(data.email)) {
+       toast.warn("There must be a valid email address", {
+         position: "top-center",
+       });
+     } else if (!passwordPattern.test(data.password)) {
+       toast.warn(
+         "Password must be in Alphanumeric format and min length of 8",
+         {
+           position: "top-center",
+         }
+       );
+     }
+     else if(data.roles.length==0){
+      toast.warn(
+        "Please select atleast one role ",
+        {
+          position: "top-center",
+        }
+      );
+     }
+     
+    else{
+      axios.post("https://syoft-db.herokuapp.com/register" , data).then((res)=>{
+        console.log(res.data)
+        toast.success("Registered Successfully !!",{position:"top-center"})
+        setTimeout(() => {
+            navigate("/login")
+        }, 3000);
+    }).catch((error)=>{
+      if(error.message){
+        toast.error("Please Try another email or password",{position:"top-center"})
+        console.log(error)
+      }
+       
+    })
+    }
 
   };
   const handleCheckbox=(e)=>{
