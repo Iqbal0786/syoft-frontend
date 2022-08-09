@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 
 export default function ProductTable({data}) {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(100);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -57,11 +57,11 @@ export default function ProductTable({data}) {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[ 100]}
+        rowsPerPageOptions={[10,25, 100]}
         component="div"
-        count={''}
-        rowsPerPage={''}
-        page={''}
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
