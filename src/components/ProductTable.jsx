@@ -57,7 +57,7 @@ export default function ProductTable({data}) {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[ 100]}
         component="div"
         count={''}
         rowsPerPage={''}
