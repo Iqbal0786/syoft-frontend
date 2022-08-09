@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 
 export default function ProductTable({data}) {
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(100);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
